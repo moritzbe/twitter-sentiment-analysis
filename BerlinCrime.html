@@ -1,0 +1,2199 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Berlin Crime</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+
+// Button
+
+function showMap(val) {
+    
+    google.maps.event.addDomListener(window, 'load', initialize(val));
+    
+}
+
+
+$(document).ready(function(){
+    
+    //showMap($("#sele").val());
+    
+    
+    $("#leave").change(function(){
+        var val = $(this).val();
+        showMap(val);
+        
+    });
+        $("#circles").change(function(){
+        var val = $(this).val();
+        sizeofPoint = parseInt(val);
+        var val = $("#leave").val();
+        showMap(val);
+    });
+    
+    
+});
+
+
+
+var sizeofPoint = 20;
+
+
+var citymap = {};
+
+citymap['Adenauerplatz'] = {
+center: new google.maps.LatLng(52.5,13.3072),
+Gewalt: 8,
+DiebEinbruch: 62,
+Sachbesch: 0,
+Drogen: 11,
+Ticket_Betrug: 176,
+Sonstiges: 14,
+Gesamt: 271,
+Gesamt2: 81
+};
+
+citymap['Afrikanische Str.'] = {
+center: new google.maps.LatLng(52.5603,13.3347),
+Gewalt: 1,
+DiebEinbruch: 8,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 51,
+Sonstiges: 1,
+Gesamt: 65,
+Gesamt2: 13
+};
+
+citymap['Alexanderplatz'] = {
+center: new google.maps.LatLng(52.5214,13.4119),
+Gewalt: 154,
+DiebEinbruch: 354,
+Sachbesch: 49,
+Drogen: 71,
+Ticket_Betrug: 919,
+Sonstiges: 163,
+Gesamt: 1710,
+Gesamt2: 628
+};
+
+citymap['Alt-Mariendorf'] = {
+center: new google.maps.LatLng(52.4397,13.3875),
+Gewalt: 13,
+DiebEinbruch: 59,
+Sachbesch: 12,
+Drogen: 4,
+Ticket_Betrug: 39,
+Sonstiges: 9,
+Gesamt: 136,
+Gesamt2: 88
+};
+
+citymap['Altstadt Spandau'] = {
+center: new google.maps.LatLng(52.5389,13.2064),
+Gewalt: 4,
+DiebEinbruch: 10,
+Sachbesch: 5,
+Drogen: 10,
+Ticket_Betrug: 46,
+Sonstiges: 3,
+Gesamt: 78,
+Gesamt2: 29
+};
+
+citymap['Alt-Tegel'] = {
+center: new google.maps.LatLng(52.5894,13.2836),
+Gewalt: 12,
+DiebEinbruch: 34,
+Sachbesch: 6,
+Drogen: 0,
+Ticket_Betrug: 11,
+Sonstiges: 20,
+Gesamt: 83,
+Gesamt2: 52
+};
+
+citymap['Alt-Tempelhof'] = {
+center: new google.maps.LatLng(52.4658,13.3856),
+Gewalt: 3,
+DiebEinbruch: 24,
+Sachbesch: 8,
+Drogen: 3,
+Ticket_Betrug: 72,
+Sonstiges: 3,
+Gesamt: 113,
+Gesamt2: 38
+};
+
+citymap['Amrumer Str.'] = {
+center: new google.maps.LatLng(52.5425,13.3503),
+Gewalt: 14,
+DiebEinbruch: 60,
+Sachbesch: 4,
+Drogen: 9,
+Ticket_Betrug: 208,
+Sonstiges: 18,
+Gesamt: 313,
+Gesamt2: 87
+};
+
+citymap['Augsburger Str.'] = {
+center: new google.maps.LatLng(52.500564,13.336756),
+Gewalt: 1,
+DiebEinbruch: 0,
+Sachbesch: 4,
+Drogen: 6,
+Ticket_Betrug: 9,
+Sonstiges: 8,
+Gesamt: 28,
+Gesamt2: 11
+};
+
+citymap['Bayerischer Platz'] = {
+center: new google.maps.LatLng(52.4886,13.34),
+Gewalt: 8,
+DiebEinbruch: 28,
+Sachbesch: 4,
+Drogen: 3,
+Ticket_Betrug: 85,
+Sonstiges: 19,
+Gesamt: 147,
+Gesamt2: 43
+};
+
+citymap['Berliner Str.'] = {
+center: new google.maps.LatLng(52.4875,13.3311),
+Gewalt: 30,
+DiebEinbruch: 42,
+Sachbesch: 13,
+Drogen: 3,
+Ticket_Betrug: 198,
+Sonstiges: 21,
+Gesamt: 307,
+Gesamt2: 88
+};
+
+citymap['Bernauer Str.'] = {
+center: new google.maps.LatLng(52.5375,13.3967),
+Gewalt: 8,
+DiebEinbruch: 58,
+Sachbesch: 0,
+Drogen: 4,
+Ticket_Betrug: 161,
+Sonstiges: 5,
+Gesamt: 236,
+Gesamt2: 70
+};
+
+citymap['Biesdorf-S�d'] = {
+center: new google.maps.LatLng(52.499514,13.547326),
+Gewalt: 1,
+DiebEinbruch: 35,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 56,
+Sonstiges: 1,
+Gesamt: 97,
+Gesamt2: 40
+};
+
+citymap['Birkenstr.'] = {
+center: new google.maps.LatLng(52.5322,13.3414),
+Gewalt: 8,
+DiebEinbruch: 17,
+Sachbesch: 8,
+Drogen: 8,
+Ticket_Betrug: 176,
+Sonstiges: 6,
+Gesamt: 223,
+Gesamt2: 41
+};
+
+citymap['Bismarckstr.'] = {
+center: new google.maps.LatLng(52.5114,13.3047),
+Gewalt: 19,
+DiebEinbruch: 128,
+Sachbesch: 2,
+Drogen: 8,
+Ticket_Betrug: 173,
+Sonstiges: 13,
+Gesamt: 343,
+Gesamt2: 157
+};
+
+citymap['Blaschkoallee'] = {
+center: new google.maps.LatLng(52.4525,13.4492),
+Gewalt: 10,
+DiebEinbruch: 18,
+Sachbesch: 3,
+Drogen: 6,
+Ticket_Betrug: 123,
+Sonstiges: 5,
+Gesamt: 165,
+Gesamt2: 37
+};
+
+citymap['Blissestr.'] = {
+center: new google.maps.LatLng(52.4864,13.3217),
+Gewalt: 2,
+DiebEinbruch: 38,
+Sachbesch: 4,
+Drogen: 3,
+Ticket_Betrug: 94,
+Sonstiges: 7,
+Gesamt: 148,
+Gesamt2: 47
+};
+
+citymap['Boddinstr.'] = {
+center: new google.maps.LatLng(52.479729,13.425878),
+Gewalt: 20,
+DiebEinbruch: 93,
+Sachbesch: 30,
+Drogen: 11,
+Ticket_Betrug: 133,
+Sonstiges: 14,
+Gesamt: 301,
+Gesamt2: 154
+};
+
+citymap['Borsigwerke'] = {
+center: new google.maps.LatLng(52.5817,13.2906),
+Gewalt: 3,
+DiebEinbruch: 4,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 17,
+Sonstiges: 0,
+Gesamt: 26,
+Gesamt2: 9
+};
+
+citymap['Brandenburger Tor'] = {
+center: new google.maps.LatLng(52.516503,13.381802),
+Gewalt: 1,
+DiebEinbruch: 18,
+Sachbesch: 0,
+Drogen: 0,
+Ticket_Betrug: 1,
+Sonstiges: 2,
+Gesamt: 22,
+Gesamt2: 19
+};
+
+citymap['Breitenbachplatz'] = {
+center: new google.maps.LatLng(52.4669,13.3086),
+Gewalt: 2,
+DiebEinbruch: 13,
+Sachbesch: 34,
+Drogen: 0,
+Ticket_Betrug: 10,
+Sonstiges: 5,
+Gesamt: 64,
+Gesamt2: 49
+};
+
+citymap['Britz-S�d'] = {
+center: new google.maps.LatLng(52.4378,13.4483),
+Gewalt: 10,
+DiebEinbruch: 16,
+Sachbesch: 24,
+Drogen: 4,
+Ticket_Betrug: 93,
+Sonstiges: 5,
+Gesamt: 152,
+Gesamt2: 54
+};
+
+citymap['B�lowstr.'] = {
+center: new google.maps.LatLng(52.4977,13.3675),
+Gewalt: 8,
+DiebEinbruch: 17,
+Sachbesch: 3,
+Drogen: 1,
+Ticket_Betrug: 21,
+Sonstiges: 2,
+Gesamt: 52,
+Gesamt2: 29
+};
+
+citymap['Bundesplatz'] = {
+center: new google.maps.LatLng(52.477356,13.329085),
+Gewalt: 13,
+DiebEinbruch: 32,
+Sachbesch: 7,
+Drogen: 0,
+Ticket_Betrug: 54,
+Sonstiges: 2,
+Gesamt: 108,
+Gesamt2: 52
+};
+
+citymap['Bundestag'] = {
+center: new google.maps.LatLng(52.519921,13.373438),
+Gewalt: 0,
+DiebEinbruch: 1,
+Sachbesch: 0,
+Drogen: 0,
+Ticket_Betrug: 0,
+Sonstiges: 0,
+Gesamt: 1,
+Gesamt2: 1
+};
+
+citymap['Cottbusser Platz'] = {
+center: new google.maps.LatLng(52.533973,13.596958),
+Gewalt: 5,
+DiebEinbruch: 14,
+Sachbesch: 4,
+Drogen: 2,
+Ticket_Betrug: 47,
+Sonstiges: 5,
+Gesamt: 77,
+Gesamt2: 25
+};
+
+citymap['Dahlem-Dorf'] = {
+center: new google.maps.LatLng(52.4575,13.2897),
+Gewalt: 1,
+DiebEinbruch: 6,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 2,
+Sonstiges: 4,
+Gesamt: 16,
+Gesamt2: 10
+};
+
+citymap['Deutsche Oper'] = {
+center: new google.maps.LatLng(52.5119,13.3106),
+Gewalt: 6,
+DiebEinbruch: 17,
+Sachbesch: 47,
+Drogen: 3,
+Ticket_Betrug: 13,
+Sonstiges: 9,
+Gesamt: 95,
+Gesamt2: 73
+};
+
+citymap['Eberswalder Str.'] = {
+center: new google.maps.LatLng(52.5419,13.4122),
+Gewalt: 19,
+DiebEinbruch: 74,
+Sachbesch: 11,
+Drogen: 0,
+Ticket_Betrug: 129,
+Sonstiges: 5,
+Gesamt: 238,
+Gesamt2: 104
+};
+
+citymap['Eisenacher Str.'] = {
+center: new google.maps.LatLng(52.489482,13.350243),
+Gewalt: 4,
+DiebEinbruch: 30,
+Sachbesch: 8,
+Drogen: 1,
+Ticket_Betrug: 76,
+Sonstiges: 4,
+Gesamt: 123,
+Gesamt2: 43
+};
+
+citymap['Elsterwerdaer Platz'] = {
+center: new google.maps.LatLng(52.5056,13.5606),
+Gewalt: 4,
+DiebEinbruch: 26,
+Sachbesch: 2,
+Drogen: 1,
+Ticket_Betrug: 45,
+Sonstiges: 3,
+Gesamt: 81,
+Gesamt2: 33
+};
+
+citymap['Ernst-Reuter-Platz'] = {
+center: new google.maps.LatLng(52.5128,13.3217),
+Gewalt: 5,
+DiebEinbruch: 50,
+Sachbesch: 1,
+Drogen: 0,
+Ticket_Betrug: 30,
+Sonstiges: 5,
+Gesamt: 91,
+Gesamt2: 56
+};
+
+citymap['Fehrbelliner Platz'] = {
+center: new google.maps.LatLng(52.4906,13.3144),
+Gewalt: 10,
+DiebEinbruch: 36,
+Sachbesch: 46,
+Drogen: 2,
+Ticket_Betrug: 140,
+Sonstiges: 22,
+Gesamt: 256,
+Gesamt2: 94
+};
+
+citymap['Frankfurter Allee'] = {
+center: new google.maps.LatLng(52.51361,13.475139),
+Gewalt: 13,
+DiebEinbruch: 55,
+Sachbesch: 42,
+Drogen: 0,
+Ticket_Betrug: 104,
+Sonstiges: 5,
+Gesamt: 219,
+Gesamt2: 110
+};
+
+citymap['Frankfurter Tor'] = {
+center: new google.maps.LatLng(52.5158,13.4542),
+Gewalt: 10,
+DiebEinbruch: 39,
+Sachbesch: 7,
+Drogen: 2,
+Ticket_Betrug: 173,
+Sonstiges: 7,
+Gesamt: 238,
+Gesamt2: 58
+};
+
+citymap['Franz-Neumann-Platz'] = {
+center: new google.maps.LatLng(52.5647,13.3639),
+Gewalt: 6,
+DiebEinbruch: 25,
+Sachbesch: 10,
+Drogen: 11,
+Ticket_Betrug: 112,
+Sonstiges: 7,
+Gesamt: 171,
+Gesamt2: 52
+};
+
+citymap['Franz�sische Str.'] = {
+center: new google.maps.LatLng(52.514787,13.390131),
+Gewalt: 14,
+DiebEinbruch: 32,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 66,
+Sonstiges: 6,
+Gesamt: 122,
+Gesamt2: 50
+};
+
+citymap['Friedrichsfelde'] = {
+center: new google.maps.LatLng(52.505876,13.512854),
+Gewalt: 3,
+DiebEinbruch: 21,
+Sachbesch: 12,
+Drogen: 0,
+Ticket_Betrug: 79,
+Sonstiges: 0,
+Gesamt: 115,
+Gesamt2: 36
+};
+
+citymap['Friedrichstr.'] = {
+center: new google.maps.LatLng(52.520292,13.386943),
+Gewalt: 10,
+DiebEinbruch: 107,
+Sachbesch: 10,
+Drogen: 1,
+Ticket_Betrug: 108,
+Sonstiges: 17,
+Gesamt: 253,
+Gesamt2: 128
+};
+
+citymap['Friedrich-Wilhelm-Platz'] = {
+center: new google.maps.LatLng(52.4714,13.328615),
+Gewalt: 1,
+DiebEinbruch: 21,
+Sachbesch: 24,
+Drogen: 0,
+Ticket_Betrug: 44,
+Sonstiges: 1,
+Gesamt: 91,
+Gesamt2: 46
+};
+
+citymap['Gesundbrunnen'] = {
+center: new google.maps.LatLng(52.548814,13.388142),
+Gewalt: 23,
+DiebEinbruch: 64,
+Sachbesch: 7,
+Drogen: 23,
+Ticket_Betrug: 186,
+Sonstiges: 14,
+Gesamt: 317,
+Gesamt2: 117
+};
+
+citymap['Gleisdreieck'] = {
+center: new google.maps.LatLng(52.4983,13.3753),
+Gewalt: 9,
+DiebEinbruch: 68,
+Sachbesch: 8,
+Drogen: 0,
+Ticket_Betrug: 184,
+Sonstiges: 11,
+Gesamt: 280,
+Gesamt2: 85
+};
+
+citymap['Gneisenaustr.'] = {
+center: new google.maps.LatLng(52.4914,13.3961),
+Gewalt: 9,
+DiebEinbruch: 58,
+Sachbesch: 6,
+Drogen: 0,
+Ticket_Betrug: 106,
+Sonstiges: 9,
+Gesamt: 188,
+Gesamt2: 73
+};
+
+citymap['G�rlitzer Bhf.'] = {
+center: new google.maps.LatLng(52.499016,13.428503),
+Gewalt: 121,
+DiebEinbruch: 170,
+Sachbesch: 7,
+Drogen: 177,
+Ticket_Betrug: 438,
+Sonstiges: 184,
+Gesamt: 1097,
+Gesamt2: 475
+};
+
+citymap['Grenzallee'] = {
+center: new google.maps.LatLng(52.463,13.445),
+Gewalt: 12,
+DiebEinbruch: 22,
+Sachbesch: 6,
+Drogen: 6,
+Ticket_Betrug: 107,
+Sonstiges: 9,
+Gesamt: 162,
+Gesamt2: 46
+};
+
+citymap['Grottkauer Str.'] = {
+center: new google.maps.LatLng(52.528253,13.590867),
+Gewalt: 3,
+DiebEinbruch: 8,
+Sachbesch: 4,
+Drogen: 2,
+Ticket_Betrug: 42,
+Sonstiges: 3,
+Gesamt: 62,
+Gesamt2: 17
+};
+
+citymap['G�ntzelstr.'] = {
+center: new google.maps.LatLng(52.491982,13.331264),
+Gewalt: 9,
+DiebEinbruch: 17,
+Sachbesch: 7,
+Drogen: 0,
+Ticket_Betrug: 40,
+Sonstiges: 6,
+Gesamt: 79,
+Gesamt2: 33
+};
+
+citymap['Halemweg'] = {
+center: new google.maps.LatLng(52.5367,13.2864),
+Gewalt: 12,
+DiebEinbruch: 12,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 54,
+Sonstiges: 3,
+Gesamt: 85,
+Gesamt2: 28
+};
+
+citymap['Hallesches Tor'] = {
+center: new google.maps.LatLng(52.4978,13.3911),
+Gewalt: 61,
+DiebEinbruch: 347,
+Sachbesch: 12,
+Drogen: 3,
+Ticket_Betrug: 308,
+Sonstiges: 82,
+Gesamt: 813,
+Gesamt2: 423
+};
+
+citymap['Hansaplatz'] = {
+center: new google.maps.LatLng(52.518095,13.342262),
+Gewalt: 8,
+DiebEinbruch: 19,
+Sachbesch: 6,
+Drogen: 4,
+Ticket_Betrug: 137,
+Sonstiges: 16,
+Gesamt: 190,
+Gesamt2: 37
+};
+
+citymap['Haselhorst'] = {
+center: new google.maps.LatLng(52.5389,13.2328),
+Gewalt: 8,
+DiebEinbruch: 24,
+Sachbesch: 9,
+Drogen: 0,
+Ticket_Betrug: 49,
+Sonstiges: 6,
+Gesamt: 96,
+Gesamt2: 41
+};
+
+citymap['Hauptbahnhof'] = {
+center: new google.maps.LatLng(52.525083,13.368944),
+Gewalt: 0,
+DiebEinbruch: 7,
+Sachbesch: 1,
+Drogen: 7,
+Ticket_Betrug: 1,
+Sonstiges: 1,
+Gesamt: 17,
+Gesamt2: 15
+};
+
+citymap['Hausvogteiplatz'] = {
+center: new google.maps.LatLng(52.5131,13.3967),
+Gewalt: 3,
+DiebEinbruch: 30,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 121,
+Sonstiges: 4,
+Gesamt: 160,
+Gesamt2: 35
+};
+
+citymap['Heidelberger Platz'] = {
+center: new google.maps.LatLng(52.479439,13.311793),
+Gewalt: 5,
+DiebEinbruch: 17,
+Sachbesch: 4,
+Drogen: 5,
+Ticket_Betrug: 25,
+Sonstiges: 2,
+Gesamt: 58,
+Gesamt2: 31
+};
+
+citymap['Heinrich-Heine-Str.'] = {
+center: new google.maps.LatLng(52.510857,13.416243),
+Gewalt: 11,
+DiebEinbruch: 48,
+Sachbesch: 9,
+Drogen: 19,
+Ticket_Betrug: 391,
+Sonstiges: 23,
+Gesamt: 501,
+Gesamt2: 87
+};
+
+citymap['Hellersdorf'] = {
+center: new google.maps.LatLng(52.5367,13.6064),
+Gewalt: 32,
+DiebEinbruch: 29,
+Sachbesch: 10,
+Drogen: 3,
+Ticket_Betrug: 87,
+Sonstiges: 35,
+Gesamt: 196,
+Gesamt2: 74
+};
+
+citymap['Hermannplatz'] = {
+center: new google.maps.LatLng(52.4872,13.4247),
+Gewalt: 76,
+DiebEinbruch: 221,
+Sachbesch: 28,
+Drogen: 48,
+Ticket_Betrug: 600,
+Sonstiges: 101,
+Gesamt: 1074,
+Gesamt2: 373
+};
+
+citymap['Hermannstr.'] = {
+center: new google.maps.LatLng(52.467191,13.43164),
+Gewalt: 5,
+DiebEinbruch: 35,
+Sachbesch: 1,
+Drogen: 4,
+Ticket_Betrug: 44,
+Sonstiges: 2,
+Gesamt: 91,
+Gesamt2: 45
+};
+
+citymap['Hohenzollernplatz'] = {
+center: new google.maps.LatLng(52.4942,13.3247),
+Gewalt: 0,
+DiebEinbruch: 4,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 14,
+Sonstiges: 3,
+Gesamt: 23,
+Gesamt2: 6
+};
+
+citymap['Holzhauser Str.'] = {
+center: new google.maps.LatLng(52.576255,13.295126),
+Gewalt: 2,
+DiebEinbruch: 13,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 10,
+Sonstiges: 0,
+Gesamt: 27,
+Gesamt2: 17
+};
+
+citymap['H�now'] = {
+center: new google.maps.LatLng(52.538108,13.634595),
+Gewalt: 4,
+DiebEinbruch: 44,
+Sachbesch: 19,
+Drogen: 0,
+Ticket_Betrug: 7,
+Sonstiges: 0,
+Gesamt: 74,
+Gesamt2: 67
+};
+
+citymap['Innsbrucker Platz'] = {
+center: new google.maps.LatLng(52.478095,13.342797),
+Gewalt: 8,
+DiebEinbruch: 14,
+Sachbesch: 5,
+Drogen: 1,
+Ticket_Betrug: 16,
+Sonstiges: 18,
+Gesamt: 62,
+Gesamt2: 28
+};
+
+citymap['Jakob-Kaiser-Platz'] = {
+center: new google.maps.LatLng(52.534345,13.293572),
+Gewalt: 14,
+DiebEinbruch: 100,
+Sachbesch: 3,
+Drogen: 6,
+Ticket_Betrug: 56,
+Sonstiges: 4,
+Gesamt: 183,
+Gesamt2: 123
+};
+
+citymap['Jannowitzbr�cke'] = {
+center: new google.maps.LatLng(52.515507,13.417952),
+Gewalt: 26,
+DiebEinbruch: 34,
+Sachbesch: 10,
+Drogen: 45,
+Ticket_Betrug: 407,
+Sonstiges: 33,
+Gesamt: 555,
+Gesamt2: 115
+};
+
+citymap['Johannisthaler Chaussee'] = {
+center: new google.maps.LatLng(52.429,13.453),
+Gewalt: 12,
+DiebEinbruch: 18,
+Sachbesch: 1,
+Drogen: 1,
+Ticket_Betrug: 118,
+Sonstiges: 8,
+Gesamt: 158,
+Gesamt2: 32
+};
+
+citymap['Jungfernheide'] = {
+center: new google.maps.LatLng(52.530624,13.301498),
+Gewalt: 14,
+DiebEinbruch: 34,
+Sachbesch: 2,
+Drogen: 7,
+Ticket_Betrug: 94,
+Sonstiges: 4,
+Gesamt: 155,
+Gesamt2: 57
+};
+
+citymap['Kaiserdamm'] = {
+center: new google.maps.LatLng(52.51,13.2822),
+Gewalt: 3,
+DiebEinbruch: 121,
+Sachbesch: 2,
+Drogen: 1,
+Ticket_Betrug: 24,
+Sonstiges: 2,
+Gesamt: 153,
+Gesamt2: 127
+};
+
+citymap['Kaiserin-Augusta-Str.'] = {
+center: new google.maps.LatLng(52.46,13.3847),
+Gewalt: 0,
+DiebEinbruch: 12,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 56,
+Sonstiges: 1,
+Gesamt: 72,
+Gesamt2: 15
+};
+
+citymap['Karl-Bonhoeffer- Ner-venklinik'] = {
+center: new google.maps.LatLng(52.578166,13.332867),
+Gewalt: 5,
+DiebEinbruch: 10,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 23,
+Sonstiges: 0,
+Gesamt: 42,
+Gesamt2: 19
+};
+
+citymap['Karl-Marx-Str.'] = {
+center: new google.maps.LatLng(52.4764,13.4392),
+Gewalt: 14,
+DiebEinbruch: 63,
+Sachbesch: 10,
+Drogen: 1,
+Ticket_Betrug: 121,
+Sonstiges: 8,
+Gesamt: 217,
+Gesamt2: 88
+};
+
+citymap['Kaulsdorf-Nord'] = {
+center: new google.maps.LatLng(52.5211,13.5889),
+Gewalt: 11,
+DiebEinbruch: 13,
+Sachbesch: 20,
+Drogen: 0,
+Ticket_Betrug: 77,
+Sonstiges: 19,
+Gesamt: 140,
+Gesamt2: 44
+};
+
+citymap['Kleistpark'] = {
+center: new google.maps.LatLng(52.490848,13.360981),
+Gewalt: 8,
+DiebEinbruch: 44,
+Sachbesch: 5,
+Drogen: 1,
+Ticket_Betrug: 169,
+Sonstiges: 8,
+Gesamt: 235,
+Gesamt2: 58
+};
+
+citymap['Klosterstr.'] = {
+center: new google.maps.LatLng(52.5161,13.4122),
+Gewalt: 2,
+DiebEinbruch: 7,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 85,
+Sonstiges: 7,
+Gesamt: 103,
+Gesamt2: 11
+};
+
+citymap['Kochstr.'] = {
+center: new google.maps.LatLng(52.5058,13.3906),
+Gewalt: 8,
+DiebEinbruch: 37,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 88,
+Sonstiges: 8,
+Gesamt: 144,
+Gesamt2: 48
+};
+
+citymap['Konstanzer Str.'] = {
+center: new google.maps.LatLng(52.493554,13.310163),
+Gewalt: 6,
+DiebEinbruch: 13,
+Sachbesch: 2,
+Drogen: 10,
+Ticket_Betrug: 81,
+Sonstiges: 8,
+Gesamt: 120,
+Gesamt2: 31
+};
+
+citymap['Kottbusser Tor'] = {
+center: new google.maps.LatLng(52.4992,13.4181),
+Gewalt: 123,
+DiebEinbruch: 309,
+Sachbesch: 22,
+Drogen: 49,
+Ticket_Betrug: 985,
+Sonstiges: 97,
+Gesamt: 1585,
+Gesamt2: 503
+};
+
+citymap['Krumme Lanke'] = {
+center: new google.maps.LatLng(52.4433,13.2411),
+Gewalt: 2,
+DiebEinbruch: 14,
+Sachbesch: 51,
+Drogen: 0,
+Ticket_Betrug: 8,
+Sonstiges: 2,
+Gesamt: 77,
+Gesamt2: 67
+};
+
+citymap['Kurf�rstendamm'] = {
+center: new google.maps.LatLng(52.5042,13.3328),
+Gewalt: 38,
+DiebEinbruch: 79,
+Sachbesch: 10,
+Drogen: 2,
+Ticket_Betrug: 131,
+Sonstiges: 17,
+Gesamt: 277,
+Gesamt2: 129
+};
+
+citymap['Kurf�rstenstr.'] = {
+center: new google.maps.LatLng(52.5,13.3619),
+Gewalt: 10,
+DiebEinbruch: 28,
+Sachbesch: 3,
+Drogen: 5,
+Ticket_Betrug: 149,
+Sonstiges: 2,
+Gesamt: 197,
+Gesamt2: 46
+};
+
+citymap['Kurt-Schumacher-Platz'] = {
+center: new google.maps.LatLng(52.5633,13.3275),
+Gewalt: 6,
+DiebEinbruch: 76,
+Sachbesch: 16,
+Drogen: 1,
+Ticket_Betrug: 99,
+Sonstiges: 3,
+Gesamt: 201,
+Gesamt2: 99
+};
+
+citymap['Leinestr.'] = {
+center: new google.maps.LatLng(52.472871,13.428475),
+Gewalt: 3,
+DiebEinbruch: 11,
+Sachbesch: 3,
+Drogen: 3,
+Ticket_Betrug: 36,
+Sonstiges: 4,
+Gesamt: 60,
+Gesamt2: 20
+};
+
+citymap['Leopoldplatz'] = {
+center: new google.maps.LatLng(52.5467,13.3592),
+Gewalt: 45,
+DiebEinbruch: 118,
+Sachbesch: 30,
+Drogen: 19,
+Ticket_Betrug: 438,
+Sonstiges: 49,
+Gesamt: 699,
+Gesamt2: 212
+};
+
+citymap['Lichtenberg'] = {
+center: new google.maps.LatLng(52.511486,13.497374),
+Gewalt: 14,
+DiebEinbruch: 31,
+Sachbesch: 5,
+Drogen: 0,
+Ticket_Betrug: 111,
+Sonstiges: 8,
+Gesamt: 169,
+Gesamt2: 50
+};
+
+citymap['Lindauer Allee'] = {
+center: new google.maps.LatLng(52.57541,13.339144),
+Gewalt: 0,
+DiebEinbruch: 6,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 34,
+Sonstiges: 0,
+Gesamt: 43,
+Gesamt2: 9
+};
+
+citymap['Lipschitzallee'] = {
+center: new google.maps.LatLng(52.424642,13.463173),
+Gewalt: 4,
+DiebEinbruch: 18,
+Sachbesch: 2,
+Drogen: 2,
+Ticket_Betrug: 58,
+Sonstiges: 1,
+Gesamt: 85,
+Gesamt2: 26
+};
+
+citymap['Louis-Lewin-Str.'] = {
+center: new google.maps.LatLng(52.539145,13.619793),
+Gewalt: 2,
+DiebEinbruch: 6,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 17,
+Sonstiges: 2,
+Gesamt: 31,
+Gesamt2: 12
+};
+
+citymap['Magdalenenstr.'] = {
+center: new google.maps.LatLng(52.512204,13.489503),
+Gewalt: 4,
+DiebEinbruch: 15,
+Sachbesch: 1,
+Drogen: 1,
+Ticket_Betrug: 80,
+Sonstiges: 2,
+Gesamt: 103,
+Gesamt2: 21
+};
+
+citymap['M�rkisches Museum'] = {
+center: new google.maps.LatLng(52.5119,13.4089),
+Gewalt: 4,
+DiebEinbruch: 20,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 75,
+Sonstiges: 2,
+Gesamt: 104,
+Gesamt2: 27
+};
+
+citymap['Mehringdamm'] = {
+center: new google.maps.LatLng(52.4944,13.3886),
+Gewalt: 34,
+DiebEinbruch: 118,
+Sachbesch: 10,
+Drogen: 1,
+Ticket_Betrug: 207,
+Sonstiges: 22,
+Gesamt: 392,
+Gesamt2: 163
+};
+
+citymap['Mendelssohn-Bartholdy-Park'] = {
+center: new google.maps.LatLng(52.503803,13.374685),
+Gewalt: 2,
+DiebEinbruch: 16,
+Sachbesch: 5,
+Drogen: 2,
+Ticket_Betrug: 43,
+Sonstiges: 5,
+Gesamt: 73,
+Gesamt2: 25
+};
+
+citymap['Mierendorffplatz'] = {
+center: new google.maps.LatLng(52.5264,13.305),
+Gewalt: 4,
+DiebEinbruch: 26,
+Sachbesch: 5,
+Drogen: 5,
+Ticket_Betrug: 72,
+Sonstiges: 10,
+Gesamt: 122,
+Gesamt2: 40
+};
+
+citymap['M�ckernbr�cke'] = {
+center: new google.maps.LatLng(52.4992,13.3828),
+Gewalt: 30,
+DiebEinbruch: 83,
+Sachbesch: 10,
+Drogen: 2,
+Ticket_Betrug: 345,
+Sonstiges: 24,
+Gesamt: 494,
+Gesamt2: 125
+};
+
+citymap['Mohrenstr.'] = {
+center: new google.maps.LatLng(52.5117,13.3847),
+Gewalt: 1,
+DiebEinbruch: 24,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 131,
+Sonstiges: 4,
+Gesamt: 162,
+Gesamt2: 27
+};
+
+citymap['Moritzplatz'] = {
+center: new google.maps.LatLng(52.5036,13.4108),
+Gewalt: 20,
+DiebEinbruch: 106,
+Sachbesch: 8,
+Drogen: 31,
+Ticket_Betrug: 509,
+Sonstiges: 40,
+Gesamt: 714,
+Gesamt2: 165
+};
+
+citymap['Naturkundemuseum'] = {
+center: new google.maps.LatLng(52.5311,13.3825),
+Gewalt: 4,
+DiebEinbruch: 43,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 106,
+Sonstiges: 3,
+Gesamt: 160,
+Gesamt2: 51
+};
+
+citymap['Nauener Platz'] = {
+center: new google.maps.LatLng(52.551521,13.367451),
+Gewalt: 13,
+DiebEinbruch: 26,
+Sachbesch: 3,
+Drogen: 12,
+Ticket_Betrug: 345,
+Sonstiges: 11,
+Gesamt: 410,
+Gesamt2: 54
+};
+
+citymap['Neuk�lln'] = {
+center: new google.maps.LatLng(52.469073,13.441721),
+Gewalt: 40,
+DiebEinbruch: 119,
+Sachbesch: 5,
+Drogen: 35,
+Ticket_Betrug: 179,
+Sonstiges: 21,
+Gesamt: 399,
+Gesamt2: 199
+};
+
+citymap['Neu-Westend'] = {
+center: new google.maps.LatLng(52.5156,13.2611),
+Gewalt: 1,
+DiebEinbruch: 6,
+Sachbesch: 1,
+Drogen: 0,
+Ticket_Betrug: 3,
+Sonstiges: 2,
+Gesamt: 13,
+Gesamt2: 8
+};
+
+citymap['Nollendorfplatz'] = {
+center: new google.maps.LatLng(52.4992,13.3539),
+Gewalt: 26,
+DiebEinbruch: 78,
+Sachbesch: 16,
+Drogen: 6,
+Ticket_Betrug: 116,
+Sonstiges: 23,
+Gesamt: 265,
+Gesamt2: 126
+};
+
+citymap['Olympiastadion'] = {
+center: new google.maps.LatLng(52.5172,13.25),
+Gewalt: 4,
+DiebEinbruch: 3,
+Sachbesch: 6,
+Drogen: 0,
+Ticket_Betrug: 1,
+Sonstiges: 4,
+Gesamt: 18,
+Gesamt2: 13
+};
+
+citymap['Onkel-Toms-H�tte'] = {
+center: new google.maps.LatLng(52.450117,13.253917),
+Gewalt: 0,
+DiebEinbruch: 3,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 4,
+Sonstiges: 4,
+Gesamt: 14,
+Gesamt2: 6
+};
+
+citymap['Oranienburger Tor'] = {
+center: new google.maps.LatLng(52.5256,13.3872),
+Gewalt: 5,
+DiebEinbruch: 34,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 102,
+Sonstiges: 1,
+Gesamt: 144,
+Gesamt2: 41
+};
+
+citymap['Oskar-Helene-Heim'] = {
+center: new google.maps.LatLng(52.4503,13.2661),
+Gewalt: 0,
+DiebEinbruch: 4,
+Sachbesch: 2,
+Drogen: 0,
+Ticket_Betrug: 4,
+Sonstiges: 0,
+Gesamt: 10,
+Gesamt2: 6
+};
+
+citymap['Osloer Str.'] = {
+center: new google.maps.LatLng(52.5569,13.3736),
+Gewalt: 75,
+DiebEinbruch: 155,
+Sachbesch: 27,
+Drogen: 31,
+Ticket_Betrug: 410,
+Sonstiges: 54,
+Gesamt: 752,
+Gesamt2: 288
+};
+
+citymap['Otisstr.'] = {
+center: new google.maps.LatLng(52.571104,13.303041),
+Gewalt: 2,
+DiebEinbruch: 4,
+Sachbesch: 4,
+Drogen: 1,
+Ticket_Betrug: 12,
+Sonstiges: 1,
+Gesamt: 24,
+Gesamt2: 11
+};
+
+citymap['Pankow'] = {
+center: new google.maps.LatLng(52.567282,13.412143),
+Gewalt: 9,
+DiebEinbruch: 45,
+Sachbesch: 20,
+Drogen: 3,
+Ticket_Betrug: 44,
+Sonstiges: 5,
+Gesamt: 126,
+Gesamt2: 77
+};
+
+citymap['Pankstr.'] = {
+center: new google.maps.LatLng(52.552265,13.381912),
+Gewalt: 9,
+DiebEinbruch: 60,
+Sachbesch: 1,
+Drogen: 11,
+Ticket_Betrug: 234,
+Sonstiges: 14,
+Gesamt: 329,
+Gesamt2: 81
+};
+
+citymap['Paracelsus-Bad'] = {
+center: new google.maps.LatLng(52.5742,13.3492),
+Gewalt: 7,
+DiebEinbruch: 17,
+Sachbesch: 30,
+Drogen: 3,
+Ticket_Betrug: 34,
+Sonstiges: 8,
+Gesamt: 99,
+Gesamt2: 57
+};
+
+citymap['Paradestr.'] = {
+center: new google.maps.LatLng(52.478165,13.386779),
+Gewalt: 2,
+DiebEinbruch: 3,
+Sachbesch: 2,
+Drogen: 1,
+Ticket_Betrug: 49,
+Sonstiges: 3,
+Gesamt: 60,
+Gesamt2: 8
+};
+
+citymap['Parchimer Allee'] = {
+center: new google.maps.LatLng(52.445354,13.449989),
+Gewalt: 4,
+DiebEinbruch: 23,
+Sachbesch: 7,
+Drogen: 5,
+Ticket_Betrug: 78,
+Sonstiges: 1,
+Gesamt: 118,
+Gesamt2: 39
+};
+
+citymap['Paulsternstr.'] = {
+center: new google.maps.LatLng(52.538104,13.248639),
+Gewalt: 6,
+DiebEinbruch: 11,
+Sachbesch: 1,
+Drogen: 3,
+Ticket_Betrug: 35,
+Sonstiges: 4,
+Gesamt: 60,
+Gesamt2: 21
+};
+
+citymap['Platz der Luftbr�cke'] = {
+center: new google.maps.LatLng(52.4856,13.3858),
+Gewalt: 17,
+DiebEinbruch: 35,
+Sachbesch: 6,
+Drogen: 0,
+Ticket_Betrug: 67,
+Sonstiges: 5,
+Gesamt: 130,
+Gesamt2: 58
+};
+
+citymap['Podbielskiallee'] = {
+center: new google.maps.LatLng(52.464175,13.295203),
+Gewalt: 2,
+DiebEinbruch: 2,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 3,
+Sonstiges: 0,
+Gesamt: 11,
+Gesamt2: 8
+};
+
+citymap['Potsdamer Platz'] = {
+center: new google.maps.LatLng(52.508769,13.376165),
+Gewalt: 8,
+DiebEinbruch: 120,
+Sachbesch: 23,
+Drogen: 1,
+Ticket_Betrug: 112,
+Sonstiges: 8,
+Gesamt: 272,
+Gesamt2: 152
+};
+
+citymap['Prinzenstr.'] = {
+center: new google.maps.LatLng(52.4983,13.4061),
+Gewalt: 13,
+DiebEinbruch: 54,
+Sachbesch: 3,
+Drogen: 7,
+Ticket_Betrug: 205,
+Sonstiges: 12,
+Gesamt: 294,
+Gesamt2: 77
+};
+
+citymap['Rathaus Neuk�lln'] = {
+center: new google.maps.LatLng(52.481065,13.435321),
+Gewalt: 12,
+DiebEinbruch: 97,
+Sachbesch: 1,
+Drogen: 0,
+Ticket_Betrug: 133,
+Sonstiges: 6,
+Gesamt: 249,
+Gesamt2: 110
+};
+
+citymap['Rathaus Reinickendorf'] = {
+center: new google.maps.LatLng(52.588217,13.325528),
+Gewalt: 2,
+DiebEinbruch: 18,
+Sachbesch: 1,
+Drogen: 0,
+Ticket_Betrug: 30,
+Sonstiges: 0,
+Gesamt: 51,
+Gesamt2: 21
+};
+
+citymap['Rathaus Sch�neberg'] = {
+center: new google.maps.LatLng(52.483319,13.341981),
+Gewalt: 2,
+DiebEinbruch: 5,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 10,
+Sonstiges: 1,
+Gesamt: 22,
+Gesamt2: 11
+};
+
+citymap['Rathaus Spandau'] = {
+center: new google.maps.LatLng(52.535514,13.19984),
+Gewalt: 22,
+DiebEinbruch: 102,
+Sachbesch: 14,
+Drogen: 4,
+Ticket_Betrug: 58,
+Sonstiges: 19,
+Gesamt: 219,
+Gesamt2: 142
+};
+
+citymap['Rathaus Steglitz'] = {
+center: new google.maps.LatLng(52.456428,13.320008),
+Gewalt: 14,
+DiebEinbruch: 56,
+Sachbesch: 31,
+Drogen: 2,
+Ticket_Betrug: 35,
+Sonstiges: 7,
+Gesamt: 145,
+Gesamt2: 103
+};
+
+citymap['Rehberge'] = {
+center: new google.maps.LatLng(52.557,13.341),
+Gewalt: 7,
+DiebEinbruch: 27,
+Sachbesch: 2,
+Drogen: 9,
+Ticket_Betrug: 136,
+Sonstiges: 8,
+Gesamt: 189,
+Gesamt2: 45
+};
+
+citymap['Reinickendorfer Str.'] = {
+center: new google.maps.LatLng(52.54,13.3703),
+Gewalt: 8,
+DiebEinbruch: 22,
+Sachbesch: 3,
+Drogen: 2,
+Ticket_Betrug: 128,
+Sonstiges: 4,
+Gesamt: 167,
+Gesamt2: 35
+};
+
+citymap['Residenzstr.'] = {
+center: new google.maps.LatLng(52.5711,13.3606),
+Gewalt: 9,
+DiebEinbruch: 29,
+Sachbesch: 6,
+Drogen: 3,
+Ticket_Betrug: 73,
+Sonstiges: 6,
+Gesamt: 126,
+Gesamt2: 47
+};
+
+citymap['Richard-Wagner-Platz'] = {
+center: new google.maps.LatLng(52.5169,13.3067),
+Gewalt: 17,
+DiebEinbruch: 41,
+Sachbesch: 7,
+Drogen: 12,
+Ticket_Betrug: 82,
+Sonstiges: 10,
+Gesamt: 169,
+Gesamt2: 77
+};
+
+citymap['Rohrdamm'] = {
+center: new google.maps.LatLng(52.536901,13.262956),
+Gewalt: 4,
+DiebEinbruch: 15,
+Sachbesch: 31,
+Drogen: 0,
+Ticket_Betrug: 66,
+Sonstiges: 5,
+Gesamt: 121,
+Gesamt2: 50
+};
+
+citymap['Rosa-Luxemburg-Platz'] = {
+center: new google.maps.LatLng(52.528201,13.410373),
+Gewalt: 1,
+DiebEinbruch: 29,
+Sachbesch: 45,
+Drogen: 2,
+Ticket_Betrug: 135,
+Sonstiges: 4,
+Gesamt: 216,
+Gesamt2: 77
+};
+
+citymap['Rosenthaler Platz'] = {
+center: new google.maps.LatLng(52.529765,13.401372),
+Gewalt: 21,
+DiebEinbruch: 87,
+Sachbesch: 11,
+Drogen: 14,
+Ticket_Betrug: 291,
+Sonstiges: 28,
+Gesamt: 452,
+Gesamt2: 133
+};
+
+citymap['R�desheimer Platz'] = {
+center: new google.maps.LatLng(52.472458,13.31446),
+Gewalt: 1,
+DiebEinbruch: 5,
+Sachbesch: 5,
+Drogen: 1,
+Ticket_Betrug: 7,
+Sonstiges: 5,
+Gesamt: 24,
+Gesamt2: 12
+};
+
+citymap['Rudow'] = {
+center: new google.maps.LatLng(52.4161,13.4953),
+Gewalt: 11,
+DiebEinbruch: 48,
+Sachbesch: 12,
+Drogen: 0,
+Ticket_Betrug: 19,
+Sonstiges: 6,
+Gesamt: 96,
+Gesamt2: 71
+};
+
+citymap['Ruhleben'] = {
+center: new google.maps.LatLng(52.5256,13.2414),
+Gewalt: 4,
+DiebEinbruch: 22,
+Sachbesch: 13,
+Drogen: 0,
+Ticket_Betrug: 0,
+Sonstiges: 2,
+Gesamt: 41,
+Gesamt2: 39
+};
+
+citymap['Samariterstr.'] = {
+center: new google.maps.LatLng(52.5147,13.4644),
+Gewalt: 9,
+DiebEinbruch: 53,
+Sachbesch: 9,
+Drogen: 1,
+Ticket_Betrug: 94,
+Sonstiges: 6,
+Gesamt: 172,
+Gesamt2: 72
+};
+
+citymap['Scharnweberstra�e'] = {
+center: new google.maps.LatLng(52.567095,13.311588),
+Gewalt: 2,
+DiebEinbruch: 15,
+Sachbesch: 5,
+Drogen: 6,
+Ticket_Betrug: 43,
+Sonstiges: 2,
+Gesamt: 73,
+Gesamt2: 28
+};
+
+citymap['Schillingstr.'] = {
+center: new google.maps.LatLng(52.520332,13.421981),
+Gewalt: 3,
+DiebEinbruch: 11,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 70,
+Sonstiges: 2,
+Gesamt: 90,
+Gesamt2: 18
+};
+
+citymap['Schlesisches Tor'] = {
+center: new google.maps.LatLng(52.5008,13.4417),
+Gewalt: 35,
+DiebEinbruch: 164,
+Sachbesch: 17,
+Drogen: 5,
+Ticket_Betrug: 487,
+Sonstiges: 25,
+Gesamt: 733,
+Gesamt2: 221
+};
+
+citymap['Schlo�str.'] = {
+center: new google.maps.LatLng(52.4608,13.3244),
+Gewalt: 8,
+DiebEinbruch: 39,
+Sachbesch: 5,
+Drogen: 0,
+Ticket_Betrug: 32,
+Sonstiges: 7,
+Gesamt: 91,
+Gesamt2: 52
+};
+
+citymap['Sch�nhauser Allee'] = {
+center: new google.maps.LatLng(52.549324,13.415076),
+Gewalt: 3,
+DiebEinbruch: 58,
+Sachbesch: 7,
+Drogen: 0,
+Ticket_Betrug: 66,
+Sonstiges: 4,
+Gesamt: 138,
+Gesamt2: 68
+};
+
+citymap['Sch�nleinstr.'] = {
+center: new google.maps.LatLng(52.4928,13.4219),
+Gewalt: 20,
+DiebEinbruch: 81,
+Sachbesch: 8,
+Drogen: 11,
+Ticket_Betrug: 602,
+Sonstiges: 23,
+Gesamt: 745,
+Gesamt2: 120
+};
+
+citymap['Schwartzkopffstr.'] = {
+center: new google.maps.LatLng(52.535394,13.37713),
+Gewalt: 4,
+DiebEinbruch: 10,
+Sachbesch: 2,
+Drogen: 1,
+Ticket_Betrug: 95,
+Sonstiges: 5,
+Gesamt: 117,
+Gesamt2: 17
+};
+
+citymap['Seestr.'] = {
+center: new google.maps.LatLng(52.548,13.347),
+Gewalt: 11,
+DiebEinbruch: 39,
+Sachbesch: 16,
+Drogen: 5,
+Ticket_Betrug: 120,
+Sonstiges: 7,
+Gesamt: 198,
+Gesamt2: 71
+};
+
+citymap['Senefelderplatz'] = {
+center: new google.maps.LatLng(52.532619,13.412679),
+Gewalt: 1,
+DiebEinbruch: 45,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 100,
+Sonstiges: 3,
+Gesamt: 153,
+Gesamt2: 50
+};
+
+citymap['Siemensdamm'] = {
+center: new google.maps.LatLng(52.5367,13.2731),
+Gewalt: 5,
+DiebEinbruch: 16,
+Sachbesch: 3,
+Drogen: 0,
+Ticket_Betrug: 81,
+Sonstiges: 4,
+Gesamt: 109,
+Gesamt2: 24
+};
+
+citymap['Sophie-Charlotte-Platz'] = {
+center: new google.maps.LatLng(52.510973,13.297527),
+Gewalt: 2,
+DiebEinbruch: 27,
+Sachbesch: 2,
+Drogen: 1,
+Ticket_Betrug: 44,
+Sonstiges: 3,
+Gesamt: 79,
+Gesamt2: 32
+};
+
+citymap['Spichernstr.'] = {
+center: new google.maps.LatLng(52.496565,13.330671),
+Gewalt: 11,
+DiebEinbruch: 19,
+Sachbesch: 18,
+Drogen: 5,
+Ticket_Betrug: 73,
+Sonstiges: 16,
+Gesamt: 142,
+Gesamt2: 53
+};
+
+citymap['Spittelmarkt'] = {
+center: new google.maps.LatLng(52.5111,13.4036),
+Gewalt: 4,
+DiebEinbruch: 35,
+Sachbesch: 41,
+Drogen: 0,
+Ticket_Betrug: 101,
+Sonstiges: 1,
+Gesamt: 182,
+Gesamt2: 80
+};
+
+citymap['Stadtmitte'] = {
+center: new google.maps.LatLng(52.5122,13.3894),
+Gewalt: 14,
+DiebEinbruch: 142,
+Sachbesch: 5,
+Drogen: 0,
+Ticket_Betrug: 234,
+Sonstiges: 15,
+Gesamt: 410,
+Gesamt2: 161
+};
+
+citymap['Strausberger Platz'] = {
+center: new google.maps.LatLng(52.5181,13.4308),
+Gewalt: 4,
+DiebEinbruch: 16,
+Sachbesch: 10,
+Drogen: 0,
+Ticket_Betrug: 88,
+Sonstiges: 1,
+Gesamt: 119,
+Gesamt2: 30
+};
+
+citymap['S�dstern'] = {
+center: new google.maps.LatLng(52.4894,13.4078),
+Gewalt: 13,
+DiebEinbruch: 48,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 118,
+Sonstiges: 9,
+Gesamt: 192,
+Gesamt2: 65
+};
+
+citymap['Tempelhof'] = {
+center: new google.maps.LatLng(52.470691,13.385624),
+Gewalt: 10,
+DiebEinbruch: 25,
+Sachbesch: 40,
+Drogen: 2,
+Ticket_Betrug: 92,
+Sonstiges: 9,
+Gesamt: 178,
+Gesamt2: 77
+};
+
+citymap['Theodor-Heuss-Platz'] = {
+center: new google.maps.LatLng(52.5097,13.2731),
+Gewalt: 5,
+DiebEinbruch: 15,
+Sachbesch: 14,
+Drogen: 0,
+Ticket_Betrug: 8,
+Sonstiges: 1,
+Gesamt: 43,
+Gesamt2: 34
+};
+
+citymap['Thielplatz'] = {
+center: new google.maps.LatLng(52.4511,13.2819),
+Gewalt: 0,
+DiebEinbruch: 5,
+Sachbesch: 6,
+Drogen: 0,
+Ticket_Betrug: 6,
+Sonstiges: 2,
+Gesamt: 19,
+Gesamt2: 11
+};
+
+citymap['Tierpark'] = {
+center: new google.maps.LatLng(52.4981,13.5228),
+Gewalt: 10,
+DiebEinbruch: 41,
+Sachbesch: 18,
+Drogen: 2,
+Ticket_Betrug: 96,
+Sonstiges: 6,
+Gesamt: 173,
+Gesamt2: 71
+};
+
+citymap['Turmstr.'] = {
+center: new google.maps.LatLng(52.525935,13.341417),
+Gewalt: 10,
+DiebEinbruch: 68,
+Sachbesch: 5,
+Drogen: 14,
+Ticket_Betrug: 245,
+Sonstiges: 10,
+Gesamt: 352,
+Gesamt2: 97
+};
+
+citymap['Uhlandstr.'] = {
+center: new google.maps.LatLng(52.5025,13.3256),
+Gewalt: 4,
+DiebEinbruch: 41,
+Sachbesch: 14,
+Drogen: 1,
+Ticket_Betrug: 16,
+Sonstiges: 8,
+Gesamt: 84,
+Gesamt2: 60
+};
+
+citymap['Ullsteinstr.'] = {
+center: new google.maps.LatLng(52.453428,13.384835),
+Gewalt: 5,
+DiebEinbruch: 13,
+Sachbesch: 6,
+Drogen: 1,
+Ticket_Betrug: 66,
+Sonstiges: 2,
+Gesamt: 93,
+Gesamt2: 25
+};
+
+citymap['Viktoria-Luise-Platz'] = {
+center: new google.maps.LatLng(52.49607,13.343192),
+Gewalt: 4,
+DiebEinbruch: 0,
+Sachbesch: 4,
+Drogen: 1,
+Ticket_Betrug: 6,
+Sonstiges: 2,
+Gesamt: 17,
+Gesamt2: 9
+};
+
+citymap['Vinetastr.'] = {
+center: new google.maps.LatLng(52.559514,13.413738),
+Gewalt: 3,
+DiebEinbruch: 9,
+Sachbesch: 4,
+Drogen: 0,
+Ticket_Betrug: 52,
+Sonstiges: 2,
+Gesamt: 70,
+Gesamt2: 16
+};
+
+citymap['Voltastr.'] = {
+center: new google.maps.LatLng(52.5422,13.3931),
+Gewalt: 10,
+DiebEinbruch: 17,
+Sachbesch: 3,
+Drogen: 1,
+Ticket_Betrug: 142,
+Sonstiges: 3,
+Gesamt: 176,
+Gesamt2: 31
+};
+
+citymap['Walther-Schreiber-Platz'] = {
+center: new google.maps.LatLng(52.4661,13.3283),
+Gewalt: 6,
+DiebEinbruch: 35,
+Sachbesch: 8,
+Drogen: 0,
+Ticket_Betrug: 57,
+Sonstiges: 1,
+Gesamt: 107,
+Gesamt2: 49
+};
+
+citymap['Warschauer Str.'] = {
+center: new google.maps.LatLng(52.505842,13.449457),
+Gewalt: 49,
+DiebEinbruch: 159,
+Sachbesch: 62,
+Drogen: 7,
+Ticket_Betrug: 264,
+Sonstiges: 36,
+Gesamt: 577,
+Gesamt2: 277
+};
+
+citymap['Weberwiese'] = {
+center: new google.maps.LatLng(52.5167,13.445),
+Gewalt: 9,
+DiebEinbruch: 16,
+Sachbesch: 5,
+Drogen: 0,
+Ticket_Betrug: 77,
+Sonstiges: 1,
+Gesamt: 108,
+Gesamt2: 30
+};
+
+citymap['Wedding'] = {
+center: new google.maps.LatLng(52.542736,13.36596),
+Gewalt: 10,
+DiebEinbruch: 47,
+Sachbesch: 25,
+Drogen: 4,
+Ticket_Betrug: 187,
+Sonstiges: 7,
+Gesamt: 280,
+Gesamt2: 86
+};
+
+citymap['Weinmeisterstr.'] = {
+center: new google.maps.LatLng(52.525,13.405),
+Gewalt: 12,
+DiebEinbruch: 53,
+Sachbesch: 5,
+Drogen: 2,
+Ticket_Betrug: 435,
+Sonstiges: 3,
+Gesamt: 510,
+Gesamt2: 72
+};
+
+citymap['Westhafen'] = {
+center: new google.maps.LatLng(52.536162,13.343486),
+Gewalt: 15,
+DiebEinbruch: 21,
+Sachbesch: 5,
+Drogen: 22,
+Ticket_Betrug: 176,
+Sonstiges: 12,
+Gesamt: 251,
+Gesamt2: 63
+};
+
+citymap['Westphalweg'] = {
+center: new google.maps.LatLng(52.446,13.386),
+Gewalt: 6,
+DiebEinbruch: 17,
+Sachbesch: 3,
+Drogen: 1,
+Ticket_Betrug: 40,
+Sonstiges: 1,
+Gesamt: 68,
+Gesamt2: 27
+};
+
+citymap['Wilmersdorfer Str.'] = {
+center: new google.maps.LatLng(52.505834,13.30695),
+Gewalt: 31,
+DiebEinbruch: 85,
+Sachbesch: 8,
+Drogen: 65,
+Ticket_Betrug: 162,
+Sonstiges: 62,
+Gesamt: 413,
+Gesamt2: 189
+};
+
+citymap['Wittenau'] = {
+center: new google.maps.LatLng(52.595633,13.334618),
+Gewalt: 20,
+DiebEinbruch: 60,
+Sachbesch: 10,
+Drogen: 0,
+Ticket_Betrug: 42,
+Sonstiges: 6,
+Gesamt: 138,
+Gesamt2: 90
+};
+
+citymap['Wittenbergplatz'] = {
+center: new google.maps.LatLng(52.5019,13.3431),
+Gewalt: 24,
+DiebEinbruch: 117,
+Sachbesch: 6,
+Drogen: 2,
+Ticket_Betrug: 114,
+Sonstiges: 17,
+Gesamt: 280,
+Gesamt2: 149
+};
+
+citymap['Wuhletal'] = {
+center: new google.maps.LatLng(52.512394,13.57539),
+Gewalt: 2,
+DiebEinbruch: 29,
+Sachbesch: 7,
+Drogen: 0,
+Ticket_Betrug: 50,
+Sonstiges: 4,
+Gesamt: 92,
+Gesamt2: 38
+};
+
+citymap['Wutzkyallee'] = {
+center: new google.maps.LatLng(52.423,13.475),
+Gewalt: 2,
+DiebEinbruch: 17,
+Sachbesch: 1,
+Drogen: 0,
+Ticket_Betrug: 40,
+Sonstiges: 3,
+Gesamt: 63,
+Gesamt2: 20
+};
+
+citymap['Yorckstr.'] = {
+center: new google.maps.LatLng(52.492737,13.370515),
+Gewalt: 9,
+DiebEinbruch: 58,
+Sachbesch: 9,
+Drogen: 1,
+Ticket_Betrug: 156,
+Sonstiges: 13,
+Gesamt: 246,
+Gesamt2: 77
+};
+
+citymap['Zitadelle'] = {
+center: new google.maps.LatLng(52.5378,13.2178),
+Gewalt: 1,
+DiebEinbruch: 6,
+Sachbesch: 1,
+Drogen: 2,
+
+Ticket_Betrug: 49,
+Sonstiges: 3,
+Gesamt: 62,
+Gesamt2: 10
+};
+
+citymap['Zoologischer Garten'] = {
+center: new google.maps.LatLng(52.507272,13.33227),
+Gewalt: 87,
+DiebEinbruch: 185,
+Sachbesch: 51,
+Drogen: 13,
+Ticket_Betrug: 182,
+Sonstiges: 88,
+Gesamt: 606,
+Gesamt2: 336
+};
+
+citymap['Zwickauer Damm'] = {
+center: new google.maps.LatLng(52.423022,13.484382),
+Gewalt: 9,
+DiebEinbruch: 19,
+Sachbesch: 1,
+Drogen: 0,
+Ticket_Betrug: 21,
+Sonstiges: 1,
+Gesamt: 51,
+Gesamt2: 29
+};
+
+
+
+
+
+var cityCircle;
+function initialize(val) {
+  // Create the map.
+  var mapOptions = {
+    zoom: 11,
+    center: new google.maps.LatLng(52.518577, 13.404709),
+    mapTypeId: google.maps.MapTypeId.TERRAIN,
+    styles: [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"color":"#000000"},{"lightness":13}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#144b53"},{"lightness":14},{"weight":1.4}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#08304b"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#0c4152"},{"lightness":5}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#0b434f"},{"lightness":25}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#000000"}]},{"featureType":"road.arterial","elementType":"geometry.stroke","stylers":[{"color":"#0b3d51"},{"lightness":16}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"}]},{"featureType":"transit","elementType":"all","stylers":[{"color":"#146474"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#021019"}]}]
+  };
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // Construct the circle for each value in 
+  // Note: We scale the area of the circle based on the population.
+  // console.log(citymap);
+  for (var city in citymap) {
+    var populationOptions = {
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.5,
+      map: map,
+      center: citymap[city].center,
+      radius: Math.sqrt(citymap[city][val]) * sizeofPoint
+    };
+    // Add the circle for this city to the map.
+    cityCircle = new google.maps.Circle(populationOptions);
+  }
+}
+
+
+
+    </script>
+  </head>
+  
+    <body>
+
+  <h1>Berlin crime-data visualisation: Don't go to Berlin!!!</h1>
+  <select id="leave">
+    <option value="Gewalt">Gewalt</option>
+    <option value="Ticket_Betrug">Ticket_Betrug</option>
+    <option value="DiebEinbruch">DiebEinbruch</option>
+    <option value="Sachbesch">Sachbesch</option>
+    <option value="Drogen">Drogen</option>
+    <option value="Sonstiges">Sonstiges</option>
+    <option value="Gesamt">Gesamt</option>
+    <option value="Gesamt2">Gesamt2</option>
+  </select>
+  
+  
+    <select id="circles">
+    <option value="20">small</option>
+    <option value="50">medium</option>
+    <option value="100">huge</option>
+  </select>
+  
+    <div id="map-canvas"></div>
+  </body>
+
+<div id="message"></div>
+
+</html>
